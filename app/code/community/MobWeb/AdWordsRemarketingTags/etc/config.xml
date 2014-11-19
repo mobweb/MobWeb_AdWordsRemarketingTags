@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <MobWeb_AdWordsRemarketingTags>
+            <version>0.1.0</version>
+        </MobWeb_AdWordsRemarketingTags>
+    </modules>
+    <global>
+        <models>
+            <adwordsremarketingtags>
+                <class>MobWeb_AdWordsRemarketingTags_Model</class>
+            </adwordsremarketingtags>
+        </models>
+        <helpers>
+            <adwordsremarketingtags>
+                <class>MobWeb_AdWordsRemarketingTags_Helper</class>
+            </adwordsremarketingtags>
+        </helpers>
+        <blocks>
+            <adwordsremarketingtags>
+                <class>MobWeb_AdWordsRemarketingTags_Block</class>
+            </adwordsremarketingtags>
+        </blocks>
+    </global>
+    <frontend>
+        <events>
+            <controller_action_layout_generate_xml_before>
+                <observers>
+                    <adwordsremarketingtags>
+                        <type>singleton</type>
+                        <class>adwordsremarketingtags/observer</class>
+                        <method>controllerActionLayoutGenerateXmlBefore</method>
+                    </adwordsremarketingtags>
+                </observers>
+            </controller_action_layout_generate_xml_before>
+        </events>
+    </frontend>
+</config>
