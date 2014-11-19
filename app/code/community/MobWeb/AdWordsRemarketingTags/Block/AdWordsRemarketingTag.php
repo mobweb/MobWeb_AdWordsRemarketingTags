@@ -280,10 +280,10 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
 		<noscript>
 			<div style="display:inline;">
-				<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/981869760/?value=0&amp;guid=ON&amp;script=0"/>
+				<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/%s/?value=0&amp;guid=ON&amp;script=0"/>
 			</div>
 		</noscript>' .
-		'', $data['ecomm_prodid'], $data['ecomm_pagetype'], $data['ecomm_pvalue'], $data['ecomm_totalvalue'], $data['ecomm_category'], $data['isSaleItem'], $data['returnCustomer'], $data['google_conversion_id']);
+		'', $data['ecomm_prodid'], $data['ecomm_pagetype'], $data['ecomm_pvalue'], $data['ecomm_totalvalue'], $data['ecomm_category'], $data['isSaleItem'], $data['returnCustomer'], $data['google_conversion_id'], $data['google_conversion_id']);
 
 		// Return the tag so that it can be printed
 		return $return;
