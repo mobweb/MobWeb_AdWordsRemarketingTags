@@ -20,7 +20,7 @@ class MobWeb_AdWordsRemarketingTags_Helper_Data extends Mage_Core_Helper_Abstrac
 		}
 	}
 
-	public function getCategoryPathAsString(Mage_Catalog_Category $category)
+	public function getCategoryPathAsString(Mage_Catalog_Model_Category $category)
 	{
 		// Extract the categry IDs from the category path
 		$categoryPathIds = explode('/', $category->getPath());
