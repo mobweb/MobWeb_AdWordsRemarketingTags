@@ -135,47 +135,37 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		}
 	}
 	
-	protected function getEcommPValue()
-	{
-		$ecommPageType = $this->getEcommPageType();
-
-		// Only pass the pvalue for the "product" page type
-		if(!in_array($ecommPageType, array('product'))) {
-			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommPValue: Pagetype is "%s", not passing a pvalue', $ecommPageType));
-
-			return;
-		}
-
-		// On the product page, get the current product
-		$product = Mage::registry('current_product');
-		Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommPValue: Product loaded: %s', $product->getId()));
-
-		// Get the product's final price from the helper function
-		$productPrice = Mage::helper('adwordsremarketingtags')->getProductPrice($product);
-		Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommPValue: Product price determined: %s', $productPrice));
-
-		return $productPrice;
-	}
-	
 	protected function getEcommTotalValue()
 	{
 		$ecommPageType = $this->getEcommPageType();
 
-		// Only pass the total value for the "cart" page type
-		if(!in_array($ecommPageType, array('cart'))) {
+		// Only pass the total value for the "product" and cart" page type
+		if(!in_array($ecommPageType, array('product', 'cart'))) {
 			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommTotalValue: Pagetype is "%s", not passing a total value', $ecommPageType));
 
 			return;
 		}
 
-		// Get the cart's grand total, with and without taxes
-		$totalValueWithoutTaxes = $this->helper('checkout/cart')->getQuote()->getSubtotal();
-		$totalValue = $this->helper('checkout/cart')->getQuote()->getGrandTotal();
-		Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommTotalValue: Total value without taxes: %s, and with taxes: %s', $totalValueWithoutTaxes, $totalValue));
+		if($ecommPageType === 'product') {
 
-		// Check if the taxes should be included in the total value
-		$includeTaxesInValues = Mage::helper('adwordsremarketingtags')->getIncludeTaxesInValues();
-		$totalValue = $includeTaxesInValues ? $totalValue : $totalValueWithoutTaxes;
+			// On the product page, get the current product
+			$product = Mage::registry('current_product');
+			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommTotalValue: Product loaded: %s', $product->getId()));
+
+			// Get the product's final price from the helper function
+			$totalValue = Mage::helper('adwordsremarketingtags')->getProductPrice($product);
+			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommTotalValue: Product price determined: %s', $totalValue));
+		} else if($ecommPageType === 'cart') {
+
+			// On the cart page, get the cart's grand total, with and without taxes
+			$totalValueWithoutTaxes = $this->helper('checkout/cart')->getQuote()->getSubtotal();
+			$totalValue = $this->helper('checkout/cart')->getQuote()->getGrandTotal();
+			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommTotalValue: Total value without taxes: %s, and with taxes: %s', $totalValueWithoutTaxes, $totalValue));
+
+			// Check if the taxes should be included in the total value
+			$includeTaxesInValues = Mage::helper('adwordsremarketingtags')->getIncludeTaxesInValues();
+			$totalValue = $includeTaxesInValues ? $totalValue : $totalValueWithoutTaxes;
+		}
 
 		// Format the total value and round it to the nearest two decimal
 		$totalValue = number_format((float) $totalValue, 2, '.', '');
@@ -231,7 +221,6 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		$data = array(
 			'ecomm_prodid' => $this->getEcommProdId(),
 			'ecomm_pagetype' => $this->getEcommPageType(),
-			'ecomm_pvalue' => $this->getEcommPValue(),
 			'ecomm_totalvalue' => $this->getEcommTotalValue(),
 			'ecomm_category' => $this->getEcommCategory(),
 			'isSaleItem' => $this->getIsSaleItem(),
@@ -263,7 +252,6 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 			var google_tag_params = {
 			ecomm_prodid: "%s",
 			ecomm_pagetype: "%s",
-			ecomm_pvalue: "%s",
 			ecomm_totalvalue: "%s",
 			ecomm_category: "%s",
 			isSaleItem: "%s",
@@ -283,7 +271,7 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 				<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/%s/?value=0&amp;guid=ON&amp;script=0"/>
 			</div>
 		</noscript>' .
-		'', $data['ecomm_prodid'], $data['ecomm_pagetype'], $data['ecomm_pvalue'], $data['ecomm_totalvalue'], $data['ecomm_category'], $data['isSaleItem'], $data['returnCustomer'], $data['google_conversion_id'], $data['google_conversion_id']);
+		'', $data['ecomm_prodid'], $data['ecomm_pagetype'], $data['ecomm_totalvalue'], $data['ecomm_category'], $data['isSaleItem'], $data['returnCustomer'], $data['google_conversion_id'], $data['google_conversion_id']);
 
 		// Return the tag so that it can be printed
 		return $return;

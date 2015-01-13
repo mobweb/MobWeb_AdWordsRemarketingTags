@@ -16,7 +16,6 @@ And the following parameters:
 
 - ecomm_prodid
 - ecomm_pagetype
-- ecomm_pvalue
 - ecomm_totalvalue
 - ecomm_category
 - isSaleItem
