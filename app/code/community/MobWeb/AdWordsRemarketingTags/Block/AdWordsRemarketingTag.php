@@ -139,8 +139,8 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 	{
 		$ecommPageType = $this->getEcommPageType();
 
-		// Only pass the total value for the "product" and cart" page type
-		if(!in_array($ecommPageType, array('product', 'cart'))) {
+		// Only pass the total value for the "product", "cart" and "purchase" page type
+		if(!in_array($ecommPageType, array('product', 'cart', 'purchase'))) {
 			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommTotalValue: Pagetype is "%s", not passing a total value', $ecommPageType));
 
 			return;
@@ -160,6 +160,18 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 			// On the cart page, get the cart's grand total, with and without taxes
 			$totalValueWithoutTaxes = $this->helper('checkout/cart')->getQuote()->getSubtotal();
 			$totalValue = $this->helper('checkout/cart')->getQuote()->getGrandTotal();
+			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommTotalValue: Total value without taxes: %s, and with taxes: %s', $totalValueWithoutTaxes, $totalValue));
+
+			// Check if the taxes should be included in the total value
+			$includeTaxesInValues = Mage::helper('adwordsremarketingtags')->getIncludeTaxesInValues();
+			$totalValue = $includeTaxesInValues ? $totalValue : $totalValueWithoutTaxes;
+		} else if($ecommPageType === 'purchase') {
+
+			// On the purchase page, get the order's grand total, with and without taxes
+			$orderId = Mage::getSingleton('checkout/session')->getLastOrderId();
+			$order = Mage::getModel('sales/order')->load($orderId);
+			$totalValueWithoutTaxes = $order->getSubtotal();
+			$totalValue = $order->getGrandTotal();
 			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommTotalValue: Total value without taxes: %s, and with taxes: %s', $totalValueWithoutTaxes, $totalValue));
 
 			// Check if the taxes should be included in the total value
