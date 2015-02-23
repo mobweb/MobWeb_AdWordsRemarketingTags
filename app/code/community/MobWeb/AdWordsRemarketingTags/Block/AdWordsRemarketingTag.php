@@ -21,6 +21,7 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		} else {
 
 			// Loop through the items in the cart, collect their IDs
+			$productIds = array();
 			foreach(Mage::helper('adwordsremarketingtags')->getProductsInCart() AS $product) {
 				$productIds[] = $product->getId();
 				Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommProdId: Product ID in cart collected: %s', $product->getId()));
