@@ -1,9 +1,31 @@
 <?php
+/**
+ * @package MobWeb_AdWordsRemarketingTags
+ * @copyright Copyright (c) MobWeb GmbH
+ */
+
+/**
+ * Block to generate full google remarketing tag.
+ *
+ * @see https://developers.google.com/adwords-remarketing-tag/parameters#retail
+ */
 class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Core_Block_Abstract
 {
-	private $ecommPageType;
+    /**
+     * Retailers page type.
+     * @var string
+     */
+    private $ecommPageType;
 
-	protected function getEcommProdId()
+    /**
+     * Get the product ID of the product or products displayed on the current page.
+     *
+     * The IDs used here should match the IDs in your Google Merchant Center feed.
+     *
+     * @todo Switch between entity_id and sku
+     * @return void|int|string "int" if one product, "string" as javascript array.
+     */
+    protected function getEcommProdId()
 	{
 		$ecommPageType = $this->getEcommPageType();
 
@@ -35,22 +57,19 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 
 		return $productId;
 	}
-	
-	protected function getEcommPageType()
+
+    /**
+     * Get the type of page that we are currently on, by looking at the current
+     * module, controller and action.
+     *
+     * @return string home, searchresults, category, product, cart, purchase, other
+     */
+    protected function getEcommPageType()
 	{
 		if(isset($this->ecommPageType)) {
 			return $this->ecommPageType;
 		}
 
-		/*
-		 *
-		 * Get the type of page that we are currently on, by looking at the current
-		 * module, controller and action. Possible page type values:
-		 * home, searchresults, category, product, cart, purchase, other
-		 *
-		 * See: https://developers.google.com/adwords-remarketing-tag/parameters
-		 *
-		 */
 		$moduleName = Mage::app()->getRequest()->getModuleName();
 		$controllerName = Mage::app()->getRequest()->getControllerName();
 		$actionName = Mage::app()->getRequest()->getActionName();
@@ -90,8 +109,13 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 
 		return $this->ecommPageType = $ecommPageType;
 	}
-	
-	protected function getEcommCategory()
+
+    /**
+     * Get current category name.
+     *
+     * @return void|array|string
+     */
+    protected function getEcommCategory()
 	{
 		$ecommPageType = $this->getEcommPageType();
 
@@ -99,7 +123,7 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		if(!in_array($ecommPageType, array('category', 'product'))) {
 			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommCategory: Pagetype is "%s", not passing a category', $ecommPageType));
 
-			return;
+            return;
 		}
 
 		if($ecommPageType === 'category') {
@@ -135,8 +159,13 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 			return $productCategoriesPaths;
 		}
 	}
-	
-	protected function getEcommTotalValue()
+
+    /**
+     * Get the total product value.
+     *
+     * @return string
+     */
+    protected function getEcommTotalValue()
 	{
 		$ecommPageType = $this->getEcommPageType();
 
@@ -186,8 +215,13 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 
 		return $totalValue;
 	}
-	
-	protected function getIsSaleItem()
+
+    /**
+     * Get is in sale state.
+     *
+     * @return void|string
+     */
+    protected function getIsSaleItem()
 	{
 		$ecommPageType = $this->getEcommPageType();
 
@@ -207,8 +241,13 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		Mage::helper('adwordsremarketingtags')->log(sprintf('getIsSaleItem: Result: %s', $isSaleItem));
 		return $isSaleItem;
 	}
-	
-	protected function getReturnCustomer()
+
+    /**
+     * Get return customer state. (logged in/out)
+     *
+     * @return string
+     */
+    protected function getReturnCustomer()
 	{
 		// Check if the customer is currently logged in
 		$returnCustomer = Mage::getSingleton('customer/session')->isLoggedIn() ? 'true' : 'false';
@@ -216,8 +255,13 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 
 		return $returnCustomer;
 	}
-	
-	protected function getGoogleConversionId()
+
+    /**
+     * Retrieves conversion id.
+     *
+     * @return mixed
+     */
+    protected function getGoogleConversionId()
 	{
 		// Get the value from the configuration
 		$googleConversionId = Mage::helper('adwordsremarketingtags')->getSettings('google_conversion_id');
@@ -226,7 +270,12 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		return $googleConversionId;
 	}
 
-	protected function _toHtml()
+    /**
+     * Prepare html output.
+     *
+     * @return string
+     */
+    protected function _toHtml()
 	{
 		$return = '';
 
