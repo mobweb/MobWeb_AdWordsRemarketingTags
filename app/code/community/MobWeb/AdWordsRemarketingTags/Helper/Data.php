@@ -70,7 +70,7 @@ class MobWeb_AdWordsRemarketingTags_Helper_Data extends Mage_Core_Helper_Abstrac
 				Mage::helper('adwordsremarketingtags')->log(sprintf('getProductsInCart: Current product is a simple product, trying to get its parent configurable product...'));
 				$parentProductIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getEntityId());
 				if(isset($parentProductIds[0])) {
-					$parentProduct = Mage::getModel('catalog/product')->load($parentIds[0]);
+					$parentProduct = Mage::getModel('catalog/product')->load($parentProductIds[0]);
 					Mage::helper('adwordsremarketingtags')->log(sprintf('getProductsInCart: Parent configurable item loaded!'));
 
 					// Save the parent product as the current product
