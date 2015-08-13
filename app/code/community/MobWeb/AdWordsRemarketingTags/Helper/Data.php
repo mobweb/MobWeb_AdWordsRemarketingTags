@@ -1,26 +1,55 @@
 <?php
+/**
+ * @package MobWeb_AdWordsRemarketingTags
+ * @copyright Copyright (c) MobWeb GmbH
+ */
 
+/**
+ * Default helper
+ */
 class MobWeb_AdWordsRemarketingTags_Helper_Data extends Mage_Core_Helper_Abstract
 {
-	public function getSettings($field)
+    /**
+     * Get specific remarketing setting.
+     *
+     * @param $field
+     * @return mixed
+     */
+    public function getSettings($field)
 	{
 		$value = Mage::getStoreConfig('google/adwordsremarketingtags/' . $field);
 		return $value;
 	}
 
-	public function getIsDebug()
+    /**
+     * Get debug state.
+     *
+     * @return bool
+     */
+    public function getIsDebug()
 	{
 		return (Mage::helper('adwordsremarketingtags')->getSettings('enable_debug') == '1');
 	}
 
-	public function log($msg)
+    /**
+     * Log a message.
+     *
+     * @param $msg string
+     */
+    public function log($msg)
 	{
 		if(Mage::helper('adwordsremarketingtags')->getIsDebug()) {
 			Mage::log($msg, NULL, 'MobWeb_AdWordsRemarketingTags.log');
 		}
 	}
 
-	public function getCategoryPathAsString(Mage_Catalog_Model_Category $category)
+    /**
+     * Get category path as "-" separated string.
+     *
+     * @param Mage_Catalog_Model_Category $category
+     * @return string
+     */
+    public function getCategoryPathAsString(Mage_Catalog_Model_Category $category)
 	{
 		// Extract the categry IDs from the category path
 		$categoryPathIds = explode('/', $category->getPath());
@@ -40,7 +69,12 @@ class MobWeb_AdWordsRemarketingTags_Helper_Data extends Mage_Core_Helper_Abstrac
 		return $categoryPath;
 	}
 
-	public function getIncludeTaxesInValues()
+    /**
+     * Get include tax state.
+     *
+     * @return bool
+     */
+    public function getIncludeTaxesInValues()
 	{
 		$result = (Mage::helper('adwordsremarketingtags')->getSettings('include_taxes') == '1');
 		Mage::helper('adwordsremarketingtags')->log(sprintf('getIncludeTaxesInValues: Result: %s', ($result) ? 'true' : 'false'));
@@ -48,7 +82,12 @@ class MobWeb_AdWordsRemarketingTags_Helper_Data extends Mage_Core_Helper_Abstrac
 		return $result;
 	}
 
-	public function getProductsInCart()
+    /**
+     * Retrieves all products in cart.
+     *
+     * @return array
+     */
+    public function getProductsInCart()
 	{
 		// First get a reference to the current quote, which contains all cart items
 		$quote = Mage::getSingleton('checkout/session')->getQuote();
@@ -70,7 +109,7 @@ class MobWeb_AdWordsRemarketingTags_Helper_Data extends Mage_Core_Helper_Abstrac
 				Mage::helper('adwordsremarketingtags')->log(sprintf('getProductsInCart: Current product is a simple product, trying to get its parent configurable product...'));
 				$parentProductIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getEntityId());
 				if(isset($parentProductIds[0])) {
-					$parentProduct = Mage::getModel('catalog/product')->load($parentIds[0]);
+					$parentProduct = Mage::getModel('catalog/product')->load($parentProductIds[0]);
 					Mage::helper('adwordsremarketingtags')->log(sprintf('getProductsInCart: Parent configurable item loaded!'));
 
 					// Save the parent product as the current product
@@ -85,7 +124,13 @@ class MobWeb_AdWordsRemarketingTags_Helper_Data extends Mage_Core_Helper_Abstrac
 		return $productsInCart;
 	}
 
-	public function getProductPrice($product)
+    /**
+     * Get product price with /without tax.
+     *
+     * @param $product
+     * @return mixed
+     */
+    public function getProductPrice($product)
 	{
 		$productFinalPriceWithoutTaxes = Mage::helper('tax')->getPrice($product, $product->getFinalPrice(), false);
 		$productFinalPrice = Mage::helper('tax')->getPrice($product, $product->getFinalPrice(), true);
