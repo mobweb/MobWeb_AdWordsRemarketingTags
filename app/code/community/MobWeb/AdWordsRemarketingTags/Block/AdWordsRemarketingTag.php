@@ -322,7 +322,7 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		</script>
 		<script type="text/javascript">
 			/* <![CDATA[ */
-			var google_conversion_id = "%s";
+			var google_conversion_id = %s;
 			var google_custom_params = window.google_tag_params;
 			var google_remarketing_only = true;
 			/* ]]> */
