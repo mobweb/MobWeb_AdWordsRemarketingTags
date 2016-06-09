@@ -1,0 +1,12 @@
+{
+    "name": "mobweb/adwords-remarketing-extension",
+    "type": "magento-module",
+    "license":"OSL-3.0",
+    "description":"A simple Magento extension that creates an «AdWords Remarketing Tag» on every page on the frontend.",
+    "authors":[
+        {
+            "name":"Louis Bataillard",
+            "email":"info@mobweb.ch"
+        }
+    ]
+}
