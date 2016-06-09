@@ -127,13 +127,21 @@ class MobWeb_AdWordsRemarketingTags_Helper_Data extends Mage_Core_Helper_Abstrac
     /**
      * Get product price with /without tax.
      *
-     * @param $product
+     * @param Mage_Catalog_Model_Product $product
      * @return mixed
      */
     public function getProductPrice($product)
 	{
-		$productFinalPriceWithoutTaxes = Mage::helper('tax')->getPrice($product, $product->getFinalPrice(), false);
-		$productFinalPrice = Mage::helper('tax')->getPrice($product, $product->getFinalPrice(), true);
+		if ($product->getTypeId() === Mage_Catalog_Model_Product_Type::TYPE_BUNDLE) {
+			/** @var Mage_Bundle_Model_Product_Price $priceModel */
+			$priceModel = $product->getPriceModel();
+			$finalPrice = $priceModel->getTotalPrices($product, 'min', false);
+		} else {
+			$finalPrice = $product->getFinalPrice();
+		}
+
+		$productFinalPriceWithoutTaxes = Mage::helper('tax')->getPrice($product, $finalPrice, false);
+		$productFinalPrice = Mage::helper('tax')->getPrice($product, $finalPrice, true);
 
 		Mage::helper('adwordsremarketingtags')->log(sprintf('getProductPrice: Product price determined. Without taxes: %s, with taxes: %s', $productFinalPriceWithoutTaxes, $productFinalPrice));
 		
