@@ -11,7 +11,8 @@
  */
 class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Core_Block_Abstract
 {
-    /**
+	const PRODUCT_ID_CONFIG_XML_PATH = 'google/adwordsremarketingtags/product_id';
+	/**
      * Retailers page type.
      * @var string
      */
@@ -39,14 +40,17 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		if($ecommPageType === 'product') {
 
 			// On the product page, get the current product's ID
-			$productId = Mage::registry('current_product')->getId();
+			$productId = Mage::registry('current_product')->getData($this->getProductIdentifierProperty());
 		} else {
 
 			// Loop through the items in the cart, collect their IDs
 			$productIds = array();
 			foreach(Mage::helper('adwordsremarketingtags')->getProductsInCart() AS $product) {
-				$productIds[] = $product->getId();
-				Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommProdId: Product ID in cart collected: %s', $product->getId()));
+				$id = $product->getData($this->getProductIdentifierProperty());
+				$productIds[] = $id;
+				Mage::helper('adwordsremarketingtags')->log(
+					sprintf('getEcommProdId: Product ID in cart collected: %s', $id)
+				);
 			}
 
 			// Implode the IDs of the items in the cart, make sure they are formatted in JavaScript array notation, e.g.: ["1","2","3"]
@@ -337,5 +341,13 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 
 		// Return the tag so that it can be printed
 		return $return;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getProductIdentifierProperty()
+	{
+		return (string)Mage::getStoreConfig(self::PRODUCT_ID_CONFIG_XML_PATH);
 	}
 }

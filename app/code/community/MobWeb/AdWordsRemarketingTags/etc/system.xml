@@ -52,6 +52,18 @@
 								Enable to output a detailled log to your <i>log</i> directory as well as to your browser's JavaScript console in the frontend.
 							]]></comment>
 						</enable_debug>
+						<product_id>
+							<label>Product ID</label>
+							<validate>required-entry</validate>
+							<frontend_type>select</frontend_type>
+							<source_model>adwordsremarketingtags/system_config_source_productId</source_model>
+							<default>id</default>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+							<comment><![CDATA[Choose which product property to use as identifier (only ID or SKU are currently supported).]]></comment>
+						</product_id>
 					</fields>
 				</adwordsremarketingtags>
 			</groups>
