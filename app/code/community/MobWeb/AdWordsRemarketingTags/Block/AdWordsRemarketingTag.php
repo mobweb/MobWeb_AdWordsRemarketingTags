@@ -177,7 +177,7 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 		if(!in_array($ecommPageType, array('product', 'cart', 'purchase'))) {
 			Mage::helper('adwordsremarketingtags')->log(sprintf('getEcommTotalValue: Pagetype is "%s", not passing a total value', $ecommPageType));
 
-			return;
+			return 0.00;
 		}
 
 		if($ecommPageType === 'product') {
@@ -318,7 +318,7 @@ class MobWeb_AdWordsRemarketingTags_Block_AdWordsRemarketingTag extends Mage_Cor
 			var google_tag_params = {
 			ecomm_prodid: "%s",
 			ecomm_pagetype: "%s",
-			ecomm_totalvalue: "%s",
+			ecomm_totalvalue: %s,
 			ecomm_category: "%s",
 			isSaleItem: "%s",
 			returnCustomer: "%s"
